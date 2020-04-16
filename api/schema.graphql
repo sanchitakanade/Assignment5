@@ -26,6 +26,9 @@ type Query {
 
 type Mutation {
   addProduct(product:productInputs!):Product!
+  deleteProduct(id: Int!): Int!
+  updateProduct(id:Int!, product:productInputs):Product
+
 }
 
 

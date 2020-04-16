@@ -25,4 +25,26 @@ async function add(_, { product }) {
   return savedProduct;
 }
 
-module.exports = { add, list, get };
+async function update(_, _id, { product }) {
+  const db = getDb();
+  console.log(_id);
+  await db.collection('inventory').updateOne({ id: 3 }, {
+    $set: {
+      Category: 'Shirts',
+      Name: 'Test2',
+      Price: 10.88,
+      Image: '',
+      description: '',
+    },
+  });
+  return db.collection('inventory').findOne({ _id });
+}
+
+async function deleteProduct(_, { id }) {
+  const db = getDb();
+  await db.collection('inventory').deleteOne({ id });
+  return db.collection('inventory').count();
+}
+module.exports = {
+  add, list, get, update, deleteProduct,
+};
