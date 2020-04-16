@@ -1,6 +1,12 @@
 /* eslint linebreak-style: ["error", "windows"] */
 const { getDb, getNextSequence } = require('./db.js');
 
+async function get(_, { id }) {
+  const db = getDb();
+  const product = await db.collection('inventory').findOne({ id });
+  return product;
+}
+
 // API to retrieve product
 async function list() {
   const db = getDb();
@@ -19,4 +25,4 @@ async function add(_, { product }) {
   return savedProduct;
 }
 
-module.exports = { add, list };
+module.exports = { add, list, get };

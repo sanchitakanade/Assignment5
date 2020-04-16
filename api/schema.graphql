@@ -21,6 +21,7 @@ enum ProductCategory {
 }
 type Query {
   productList: [Product!]!
+  product(id: Int!): Product!
 }
 
 type Mutation {

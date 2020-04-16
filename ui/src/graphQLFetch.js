@@ -1,3 +1,9 @@
+/* Name: Sanchita Kanade
+   Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
+   Assignment: 5
+   File: graphQLFetch.js
+*/
+
 /* eslint linebreak-style: ["error", "windows"] */
 
 export default async function graphQLFetch(query, variables = {}) {
