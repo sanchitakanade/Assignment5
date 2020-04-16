@@ -25,19 +25,12 @@ async function add(_, { product }) {
   return savedProduct;
 }
 
-async function update(_, _id, { product }) {
+async function update(_, { id, changes }) {
   const db = getDb();
-  console.log(_id);
-  await db.collection('inventory').updateOne({ id: 3 }, {
-    $set: {
-      Category: 'Shirts',
-      Name: 'Test2',
-      Price: 10.88,
-      Image: '',
-      description: '',
-    },
-  });
-  return db.collection('inventory').findOne({ _id });
+  console.log(id);
+  await db.collection('inventory').updateOne({ id }, { $set: changes });
+  const savedIssue = await db.collection('inventory').findOne({ id });
+  return savedIssue;
 }
 
 async function deleteProduct(_, { id }) {

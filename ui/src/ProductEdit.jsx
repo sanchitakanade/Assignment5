@@ -8,15 +8,19 @@
 
 import React from 'react';
 import graphQLFetch from './graphQLFetch.js';
+import NumInput from './NumInput.jsx';
+import TextInput from './TextInput.jsx';
 
 export default class ProductEdit extends React.Component {
   constructor() {
     super();
     this.state = {
       product: {},
+      invalidFields: {},
     };
     this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onValidityChange = this.onValidityChange.bind(this);
   }
 
   componentDidMount() {
@@ -31,11 +35,21 @@ export default class ProductEdit extends React.Component {
     }
   }
 
-  onChange(event) {
-    const { name, value } = event.target;
+  onChange(event, naturalValue) {
+    const { name, value: textValue } = event.target;
+    const value = naturalValue === undefined ? textValue : naturalValue;
     this.setState(prevState => ({
       product: { ...prevState.product, [name]: value },
     }));
+  }
+
+  onValidityChange(event, valid) {
+    const { name } = event.target;
+    this.setState((prevState) => {
+      const invalidFields = { ...prevState.invalidFields, [name]: !valid };
+      if (valid) delete invalidFields[name];
+      return { invalidFields };
+    });
   }
 
   handleSubmit(e) {
@@ -56,14 +70,7 @@ export default class ProductEdit extends React.Component {
     const data = await graphQLFetch(query, { id });
 
     if (data) {
-      const { product } = data;
-      product.Category = product.Category != null ? product.Category.toString() : '';
-      product.Name = product.Name != null ? product.Name : '';
-      product.Image = product.Image != null ? product.Image : '';
-      product.Price = product.Price != null ? product.Price.toString() : '';
-      this.setState({ product });
-    } else {
-      this.setState({ product: {} });
+      this.setState({ product: data ? data.product : {}, invalidFields: {} });
     }
   }
 
@@ -78,6 +85,17 @@ export default class ProductEdit extends React.Component {
     }
     const { product: { Name, Category } } = this.state;
     const { product: { Image, Price } } = this.state;
+    const { invalidFields } = this.state;
+
+    let validationMessage;
+    if (Object.keys(invalidFields).length !== 0) {
+      validationMessage = (
+        <div className="error">
+          Please correct invalid fields before submitting.
+        </div>
+      );
+    }
+
     return (
       <form onSubmit={this.handleSubmit}>
         <h3>{`Editing product: ${id}`}</h3>
@@ -86,10 +104,11 @@ export default class ProductEdit extends React.Component {
             <tr>
               <td>Name:</td>
               <td>
-                <input
+                <TextInput
                   name="Name"
                   value={Name}
                   onChange={this.onChange}
+                  key={id}
                 />
               </td>
             </tr>
@@ -108,20 +127,22 @@ export default class ProductEdit extends React.Component {
             <tr>
               <td>Price:</td>
               <td>
-                <input
+                <NumInput
                   name="Price"
                   value={Price}
                   onChange={this.onChange}
+                  key={id}
                 />
               </td>
             </tr>
             <tr>
               <td>Image:</td>
               <td>
-                <input
+                <TextInput
                   name="Image"
                   value={Image}
                   onChange={this.onChange}
+                  key={id}
                 />
               </td>
             </tr>
@@ -131,6 +152,8 @@ export default class ProductEdit extends React.Component {
             </tr>
           </tbody>
         </table>
+        {validationMessage}
+
       </form>
     );
   }
