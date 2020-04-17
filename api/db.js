@@ -1,3 +1,9 @@
+/* Name: Sanchita Kanade
+   Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
+   Assignment: 5
+   File: db.js
+*/
+
 /* eslint linebreak-style: ["error", "windows"] */
 
 require('dotenv').config();

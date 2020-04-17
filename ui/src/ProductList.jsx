@@ -17,6 +17,7 @@ export default class ProductList extends React.Component {
     this.state = { products: [] };
     this.list();
     this.createProduct = this.createProduct.bind(this);
+    this.deleteProduct = this.deleteProduct.bind(this);
   }
 
   componentDidMount() {
@@ -49,6 +50,28 @@ export default class ProductList extends React.Component {
     }
   }
 
+  async deleteProduct(index) {
+    const query = `mutation deleteProduct($id: Int!) {
+      deleteProduct(id: $id)
+    }`;
+    const { products } = this.state;
+    const { location: { pathname, search }, history } = this.props;
+    const { id } = products[index];
+    const data = await graphQLFetch(query, { id });
+    if (data && data.deleteProduct) {
+      this.setState((prevState) => {
+        const newList = [...prevState.products];
+        if (pathname === `/products/${id}`) {
+          history.push({ pathname: '/products', search });
+        }
+        newList.splice(index, 1);
+        return { products: newList };
+      });
+    } else {
+      this.list();
+    }
+  }
+
   render() {
     const { products } = this.state;
     return (
@@ -56,7 +79,7 @@ export default class ProductList extends React.Component {
         <h1>My Company Inventory</h1>
         <div>Showing all available products</div>
         <hr />
-        <ProductTable products={products} />
+        <ProductTable products={products} deleteProduct={this.deleteProduct} />
         <div>Add a new product to inventory</div>
         <hr />
         <ProductAdd createProduct={this.createProduct} />

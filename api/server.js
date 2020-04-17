@@ -1,10 +1,10 @@
 /*
 Name: Sanchita Kanade
 Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
-Assignment: 4
+Assignment: 5
 File: server.js
 */
-/* eslint linebreak-style: ["error", "windows"] */
+
 require('dotenv').config();
 const express = require('express');
 const { connectToDb } = require('./db.js');

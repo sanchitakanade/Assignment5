@@ -1,14 +1,14 @@
 /* Name: Sanchita Kanade
    Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
-   Assignment: 4
+   Assignment: 5
    File: init.mongo.js
 */
 
 /* global db print */
 /* eslint no-restricted-globals: "off" */
-/* eslint linebreak-style: ["error", "windows"] */
 
 db.inventory.remove({});
+db.deleted_products.remove({});
 
 const productsDB = [
   {
@@ -34,4 +34,5 @@ print('Inserted', count, 'items');
 // here _id indicates counter's name, it's just a string
 db.counters.remove({ _id: 'productsConter' });
 db.counters.insert({ _id: 'productsConter', current: count });
-db.issues.createIndex({ id: 1 }, { unique: true });
+db.inventory.createIndex({ id: 1 }, { unique: true });
+db.deleted_products.createIndex({ id: 1 }, { unique: true });

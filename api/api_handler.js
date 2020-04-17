@@ -1,3 +1,9 @@
+/* Name: Sanchita Kanade
+   Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
+   Assignment: 5
+   File: api_handler.js
+*/
+
 /* eslint linebreak-style: ["error", "windows"] */
 
 const fs = require('fs');
@@ -13,7 +19,7 @@ const resolvers = {
   Mutation: {
     addProduct: product.add,
     updateProduct: product.update,
-    deleteProduct: product.deleteProduct,
+    deleteProduct: product.delete,
   },
 };
 

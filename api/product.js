@@ -1,3 +1,9 @@
+/* Name: Sanchita Kanade
+   Class:CS648.02 Modern Full-Stack Web Development (Spring 2020)
+   Assignment: 5
+   File: products.js
+*/
+
 /* eslint linebreak-style: ["error", "windows"] */
 const { getDb, getNextSequence } = require('./db.js');
 
@@ -33,11 +39,19 @@ async function update(_, { id, changes }) {
   return savedIssue;
 }
 
-async function deleteProduct(_, { id }) {
+async function remove(_, { id }) {
   const db = getDb();
-  await db.collection('inventory').deleteOne({ id });
-  return db.collection('inventory').count();
+  const product = await db.collection('inventory').findOne({ id });
+  if (!product) return false;
+  product.deleted = new Date();
+  let result = await db.collection('deleted_products').insertOne(product);
+  if (result.insertedId) {
+    result = await db.collection('inventory').removeOne({ id });
+    return result.deletedCount === 1;
+  }
+  return false;
 }
+
 module.exports = {
-  add, list, get, update, deleteProduct,
+  add, list, get, update, delete: remove,
 };
